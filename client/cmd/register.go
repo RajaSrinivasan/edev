@@ -6,7 +6,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var nameToregister, pubkeyfileName, uniqueId *string
+var nameToregister string
+var publisherNode *bool
 
 // registerCmd represents the register command
 var registerCmd = &cobra.Command{
@@ -14,25 +15,18 @@ var registerCmd = &cobra.Command{
 	Short: "Register the device",
 	Long: `
 	Register the device with the server to establish 
-	a trusted relationship.
-
-	The unique id is associated with the hostname.
-	
-	The public key file enables future interactions.
-	
+	a trusted relationship.	
 	Argument is the name to register. In most cases, this will be the same as the hostname.`,
 	Args: cobra.MinimumNArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Will register the name ", args[0])
-	},
+	Run:  Register,
 }
 
 func init() {
 	rootCmd.AddCommand(registerCmd)
+	publisherNode = registerCmd.PersistentFlags().BoolP("publisher-node", "p", false, "Register me as a publisher")
+}
 
-	pubkeyfileName = registerCmd.PersistentFlags().StringP("public-key-filename", "p", "", "Public key filename")
-	registerCmd.MarkFlagRequired("public-key-filename")
-	uniqueId = registerCmd.PersistentFlags().StringP("unique-id-filename", "u", "", "Unique Id file. If it does not exist, will generate and store")
-	registerCmd.MarkFlagRequired("unique-id-filename")
-
+func Register(cmd *cobra.Command, args []string) {
+	nameToregister = args[0]
+	fmt.Println("Will register the name ", args[0])
 }

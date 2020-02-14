@@ -19,16 +19,11 @@ var Server string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "cmd",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Short: "Client for Device Support",
+	Long: `
+	Client side support for embedded devices.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+		`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -44,8 +39,12 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.device.yaml)")
-	rootCmd.PersistentFlags().StringP("password", "w", "", "Password")
-	rootCmd.MarkFlagRequired("password")
+	rootCmd.PersistentFlags().StringP("password-salt", "s", "", "Salt for password generation")
+	rootCmd.MarkFlagRequired("password-salt")
+	rootCmd.PersistentFlags().StringP("unique-id-filename", "u", "", "Unique Id Filename")
+	rootCmd.MarkFlagRequired("unique-id-filename")
+	rootCmd.PersistentFlags().StringP("server-url", "S", "", "Server URL")
+	rootCmd.MarkFlagRequired("server-url")
 
 }
 
@@ -77,8 +76,8 @@ func initConfig() {
 	} else {
 		fmt.Println("No config file. Will use password environment var")
 		viper.SetEnvPrefix("edev")
-		viper.BindEnv("password")
-		viper.BindPFlag("password", rootCmd.PersistentFlags().Lookup("password"))
+		viper.BindEnv("passsalt")
+		viper.BindPFlag("passsalt", rootCmd.PersistentFlags().Lookup("password-salt"))
 	}
-	Password = viper.GetString("password")
+	Password = viper.GetString("password-salt")
 }

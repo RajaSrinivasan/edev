@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -20,9 +20,7 @@ var pushCmd = &cobra.Command{
 
 	Only spm files can be pushed.`,
 	Args: cobra.MinimumNArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("push called")
-	},
+	Run:  Push,
 }
 
 func init() {
@@ -30,4 +28,8 @@ func init() {
 	rootCmd.AddCommand(pushCmd)
 	targetnodes = pushCmd.PersistentFlags().StringArrayP("target-nodes", "t", []string{""}, "Target nodes")
 
+}
+
+func Push(cmd *cobra.Command, args []string) {
+	log.Printf("Will push %s to %v", args[0], *targetnodes)
 }

@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/spf13/cobra"
 )
 
-var downloadHistory *string
+var newerThan *string
 
 // pullCmd represents the pull command
 var pullCmd = &cobra.Command{
@@ -17,20 +17,21 @@ var pullCmd = &cobra.Command{
 
 	If an argument is provided then only the specified name will be downloaded.
 
-	Otherwise:
-		A history file is provided to ascertain the last download. 
-		Only newer downloads are sent. Only 1 file is sent for each invocation.
-
 	All files are .spm files.
 
 	`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("pull called")
-	},
+	Run: Pull,
 }
 
 func init() {
 	rootCmd.AddCommand(pullCmd)
-	downloadHistory = pushCmd.PersistentFlags().StringP("history-file", "H", "", "Download history file")
+	newerThan = pullCmd.PersistentFlags().StringP("newer-than", "n", "", "Reference file. Mod time is used to get files newer than")
+}
 
+func Pull(cmd *cobra.Command, args []string) {
+	if len(args) > 0 {
+		log.Printf("Will pull the file %s", args[0])
+	} else {
+		log.Println("Will pull all files available")
+	}
 }

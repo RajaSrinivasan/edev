@@ -1,11 +1,10 @@
-package impl
+package login
 
 import (
 	"bytes"
 	"crypto/md5"
 	"encoding/binary"
 	"encoding/hex"
-	"fmt"
 	"strings"
 	"time"
 
@@ -39,8 +38,9 @@ func init() {
 	driftMinutesBehind, _ = time.ParseDuration("3m")
 }
 
-// Generate (un string, ud uuid.UUID, t time.Time) []byte
+// Generate (un string, ud uuid.UUID, t time.Time) string
 // generates a password based on the username, UUID and the timestamp.
+// The time is truncated to the hour.
 func Generate(un string, ud uuid.UUID, t time.Time) string {
 
 	buf := new(bytes.Buffer)
@@ -69,9 +69,15 @@ func Generate(un string, ud uuid.UUID, t time.Time) string {
 	return hex.EncodeToString(result)
 }
 
+// Verify(username string, password string, ud uuid.UUID, ts ...time.Time) bool
+// Verifies that the password provided matches with the generated password.
+// Assuming the clocks drift, an allowance is imposed and the time dependent password
+// is checked at 3 points in time.
+// The real server will use the current time in UTC, Specific time overrides support
+// unit testing.
 func Verify(username string, password string, ud uuid.UUID, ts ...time.Time) bool {
 
-	t1 := time.Now()
+	t1 := time.Now().UTC()
 	if len(ts) > 0 {
 		for _, t := range ts {
 			t1 = t
@@ -79,21 +85,18 @@ func Verify(username string, password string, ud uuid.UUID, ts ...time.Time) boo
 	}
 
 	p1 := Generate(username, ud, t1)
-	fmt.Printf("t1= %v p1 = %s\n", t1, p1)
 	if strings.Compare(p1, password) == 0 {
 		return true
 	}
 
 	t2 := t1.Add(driftMinutesAhead)
 	p2 := Generate(username, ud, t2)
-	fmt.Printf("t2= %v p2 = %s\n", t2, p2)
 	if strings.Compare(p2, password) == 0 {
 		return true
 	}
 
 	t3 := t1.Add(driftMinutesBehind)
 	p3 := Generate(username, ud, t3)
-	fmt.Printf("t3= %v p3 = %s\n", t3, p3)
 	if strings.Compare(p3, password) == 0 {
 		return true
 	}

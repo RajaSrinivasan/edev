@@ -24,7 +24,6 @@ var authorizeCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(authorizeCmd)
-	revokeAuthorization = authorizeCmd.PersistentFlags().BoolP("revoke", "r", false, "Revoke the authorization of the device")
 }
 
 func Authorize(cmd *cobra.Command, args []string) {

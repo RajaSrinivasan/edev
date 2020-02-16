@@ -94,7 +94,7 @@ func loginAdmin(c *gin.Context) {
 func ProvideService(certfn, pvtkeyfn, hostnport string) {
 	log.Printf("Providing Service HTTPS")
 
-	r := gin.Default()
+	r := gin.Default()username
 	r.LoadHTMLGlob("serve/html/*")
 	r.GET("/", getTop)
 	// Device functions

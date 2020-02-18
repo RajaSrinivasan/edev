@@ -14,5 +14,5 @@ func TestProvideServiceRaw(t *testing.T) {
 func TestProvideService(t *testing.T) {
 
 	log.SetPrefix(t.Name())
-	ProvideService("../install/certfile", "/Users/rajasrinivasan/.ssh/id_rsa", "localhost:9443")
+	ProvideService("../../config/certfile", "/Users/rajasrinivasan/.ssh/id_rsa", "localhost:9443", "../../config/html")
 }

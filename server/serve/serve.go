@@ -8,7 +8,15 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"gitlab.com/RajaSrinivasan/edev/server/login"
 )
+
+var tempid uuid.UUID
+
+func init() {
+	tempid, _ = uuid.Parse("301245be-4e02-4036-bec4-ec20edbdaadd")
+}
 
 func serveClient(client net.Conn) {
 	defer client.Close()
@@ -88,14 +96,26 @@ func loginAdmin(c *gin.Context) {
 	password := c.PostForm("password")
 	log.Printf("Admin Login: %s %s", username, password)
 	c.String(http.StatusOK, "Admin Login")
-
 }
 
-func ProvideService(certfn, pvtkeyfn, hostnport string) {
+func loginAdminAPI(c *gin.Context) {
+	username := c.Param("username")
+	password := c.Param("password")
+	log.Printf("Login: %s %s", username, password)
+
+	status := login.Verify(username, password, tempid)
+	if status {
+		c.String(http.StatusOK, "Login "+username+" succeeded ")
+	} else {
+		c.String(http.StatusForbidden, "Login failed "+username+" "+password)
+	}
+}
+
+func ProvideService(certfn, pvtkeyfn, hostnport string, htmlpath string) {
 	log.Printf("Providing Service HTTPS")
 
-	r := gin.Default()username
-	r.LoadHTMLGlob("serve/html/*")
+	r := gin.Default()
+	r.LoadHTMLGlob(htmlpath + "/*")
 	r.GET("/", getTop)
 	// Device functions
 	devroutes := r.Group("/d")
@@ -106,8 +126,10 @@ func ProvideService(certfn, pvtkeyfn, hostnport string) {
 	r.GET("/api/v1/device/login/:deviceid/:password", loginDevice)
 	r.GET("/api/v1/device/pull/:token", getDeviceUpdates)
 	// Admin functions
-	adminroutes := r.Group("/a")
-	adminroutes.POST("/login", loginAdmin)
+
+	//adminroutes := r.Group("/a")
+	//adminroutes.POST("/login", loginAdmin)
+	r.GET("/login/:username/:password", loginAdminAPI)
 
 	r.POST("/api/v1/admin/publish/:token/:file", publishFile)
 	r.GET("/api/v1/admin/log/:deviceid", getLog)

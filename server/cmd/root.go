@@ -7,10 +7,16 @@ import (
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"gitlab.com/RajaSrinivasan/edev/server/serve"
 )
 
 var cfgFile string
 var verbosityLevel int
+var serverURL string
+
+//var serverPort string
+var serverCertFileName, pvtKeyFileName string
+var htmlPath string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -26,6 +32,7 @@ var rootCmd = &cobra.Command{
 // Server provides the service ie runs as a daemon.
 func Server(cmd *cobra.Command, args []string) {
 	log.Println("Starting the service")
+	serve.ProvideService(serverCertFileName, pvtKeyFileName, serverURL, htmlPath)
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -41,7 +48,6 @@ func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.server.yaml)")
 	rootCmd.PersistentFlags().IntVarP(&verbosityLevel, "verbose", "v", 0, "verbosity level 1 .. 16")
-
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -59,7 +65,8 @@ func initConfig() {
 
 		// Search config in home directory with name ".server" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".server")
+		viper.AddConfigPath("../config")
+		viper.SetConfigName(".edev")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
@@ -67,5 +74,13 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		log.Println("Using config file:", viper.ConfigFileUsed())
+		serverURL = viper.GetString("server.url")
+		serverPort := viper.GetString("server.port")
+		log.Printf("Server URL set to %s", serverURL)
+
+		serverURL = serverURL + ":" + serverPort
+		serverCertFileName = viper.GetString("server.certfile")
+		pvtKeyFileName = viper.GetString("server.privatekey")
+		htmlPath = viper.GetString("server.htmlpath")
 	}
 }

@@ -5,6 +5,8 @@ import (
 	"crypto/md5"
 	"encoding/binary"
 	"encoding/hex"
+	"errors"
+	"log"
 	"strings"
 	"time"
 
@@ -33,9 +35,27 @@ var saltBasis = []uint32{27644437, // Bell Prime
 	28657, // Fibanocci Primes
 	514229}
 
+var uniqueIdTable map[string]uuid.UUID
+var errorId uuid.UUID
+
 func init() {
 	driftMinutesAhead, _ = time.ParseDuration("-3m")
 	driftMinutesBehind, _ = time.ParseDuration("3m")
+
+	uniqueIdTable = make(map[string]uuid.UUID)
+	id, _ := uuid.Parse("301245be-4e02-4036-bec4-ec20edbdaadd")
+	uniqueIdTable["srini"] = id
+	id, _ = uuid.Parse("f0018d8a-d221-46af-820e-53c9a7f44c64")
+	uniqueIdTable["admin"] = id
+	errorId = uuid.New()
+}
+
+func lookupUniqueId(un string) (uuid.UUID, error) {
+	val, err := uniqueIdTable[un]
+	if !err {
+		return errorId, errors.New("Undefined user " + un)
+	}
+	return val, nil
 }
 
 // Generate (un string, ud uuid.UUID, t time.Time) string
@@ -84,19 +104,27 @@ func Verify(username string, password string, ud uuid.UUID, ts ...time.Time) boo
 		}
 	}
 
-	p1 := Generate(username, ud, t1)
+	uid, err := lookupUniqueId(username)
+	if err != nil {
+		log.Printf("%s", err)
+		return false
+	}
+
+	log.Printf("Using unique id %s incoming %s", uid.String(), ud.String())
+
+	p1 := Generate(username, uid, t1)
 	if strings.Compare(p1, password) == 0 {
 		return true
 	}
 
 	t2 := t1.Add(driftMinutesAhead)
-	p2 := Generate(username, ud, t2)
+	p2 := Generate(username, uid, t2)
 	if strings.Compare(p2, password) == 0 {
 		return true
 	}
 
 	t3 := t1.Add(driftMinutesBehind)
-	p3 := Generate(username, ud, t3)
+	p3 := Generate(username, uid, t3)
 	if strings.Compare(p3, password) == 0 {
 		return true
 	}

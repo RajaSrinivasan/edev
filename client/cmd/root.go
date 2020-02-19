@@ -15,6 +15,8 @@ var cfgFile string
 
 var Password string
 var Server string
+var registeredName string
+var uniqueId string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -22,8 +24,7 @@ var rootCmd = &cobra.Command{
 	Short: "Client for Device Support",
 	Long: `
 	Client side support for embedded devices.
-
-		`,
+	`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -41,11 +42,6 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.device.yaml)")
 	rootCmd.PersistentFlags().StringP("password-salt", "s", "", "Salt for password generation")
 	rootCmd.MarkFlagRequired("password-salt")
-	rootCmd.PersistentFlags().StringP("unique-id-filename", "u", "", "Unique Id Filename")
-	rootCmd.MarkFlagRequired("unique-id-filename")
-	rootCmd.PersistentFlags().StringP("server-url", "S", "", "Server URL")
-	rootCmd.MarkFlagRequired("server-url")
-
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -63,7 +59,8 @@ func initConfig() {
 
 		// Search config in home directory with name ".cmd" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".device")
+		viper.AddConfigPath("../config")
+		viper.SetConfigName(".edev")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
@@ -73,6 +70,8 @@ func initConfig() {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 		Server = viper.GetString("server.url")
 		log.Printf("Server URL set to %s", Server)
+		registeredName = viper.GetString("client.name")
+		uniqueId = viper.GetString("client.uuid")
 	} else {
 		fmt.Println("No config file. Will use password environment var")
 		viper.SetEnvPrefix("edev")

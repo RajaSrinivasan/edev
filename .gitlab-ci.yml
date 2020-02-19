@@ -15,5 +15,5 @@ compile:
     - cd server; go build -race -ldflags "-extldflags '-static'" -o $CI_PROJECT_DIR/server; cd ..
   artifacts:
     paths:
-      - $CI_PROJECT_DIR/client
-      - $CI_PROJECT_DIR/server
+      - $CI_PROJECT_DIR/client/client
+      - $CI_PROJECT_DIR/server/server

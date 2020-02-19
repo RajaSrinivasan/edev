@@ -5,15 +5,9 @@ variables:
   REPO_NAME: gitlab.com/RajaSrinivasan/edev
 
 stages:
-  - test
   - build
   - deploy
 
-format:
-  script:
-    - cd client; go test -v ./...
-    - cd server; go test -v ./...
-    
 compile:
   stage: build
   script:

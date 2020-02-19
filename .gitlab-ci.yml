@@ -11,8 +11,9 @@ stages:
 
 format:
   script:
-    - go test -v $(go list ./... )
-
+    - cd client; go test -v ./...
+    - cd server; go test -v ./...
+    
 compile:
   stage: build
   script:

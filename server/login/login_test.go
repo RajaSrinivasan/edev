@@ -68,3 +68,10 @@ func TestVerify(t *testing.T) {
 	stat = Verify("admin", adminPassword, fixedid, badAhead)
 	t.Logf("Verification status Badahead %v\n", stat)
 }
+
+func TestUUID(t *testing.T) {
+	for i := 0; i < 9; i++ {
+		nextid := uuid.New()
+		t.Logf("%s", nextid.String())
+	}
+}

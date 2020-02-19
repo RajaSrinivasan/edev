@@ -48,6 +48,8 @@ func init() {
 	id, _ = uuid.Parse("f0018d8a-d221-46af-820e-53c9a7f44c64")
 	uniqueIdTable["admin"] = id
 	errorId = uuid.New()
+	id, _ = uuid.Parse("9542a93a-82e7-403f-8857-4c55fd38391a")
+	uniqueIdTable["AB3456"] = id
 }
 
 func lookupUniqueId(un string) (uuid.UUID, error) {

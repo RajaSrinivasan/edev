@@ -7,12 +7,14 @@ import (
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"gitlab.com/RajaSrinivasan/edev/server/device"
 	"gitlab.com/RajaSrinivasan/edev/server/serve"
 )
 
 var cfgFile string
 var verbosityLevel int
 var serverURL string
+var deviceDB string
 
 //var serverPort string
 var serverCertFileName, pvtKeyFileName string
@@ -82,5 +84,8 @@ func initConfig() {
 		serverCertFileName = viper.GetString("server.certfile")
 		pvtKeyFileName = viper.GetString("server.privatekey")
 		htmlPath = viper.GetString("server.htmlpath")
+
+		deviceDB = viper.GetString("server.devicedb")
+		device.Load(deviceDB)
 	}
 }

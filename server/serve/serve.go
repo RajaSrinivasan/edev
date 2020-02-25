@@ -69,33 +69,12 @@ func getTop(c *gin.Context) {
 	//c.String(http.StatusOK, "Hello from TOPR LLC.")
 }
 
-func registerDevice(c *gin.Context) {
-	c.String(http.StatusOK, "Registration of device")
-	log.Printf("Device %s SoftRev %s Pubkey %s", c.Param("deviceid"), c.Param("softrev"), c.Param("pubkey"))
+func showDevice(c *gin.Context) {
+	c.String(http.StatusOK, "Show Device")
 }
 
-func loginDevice(c *gin.Context) {
-
-	c.String(http.StatusOK, "Login Device")
-}
-
-func getDeviceUpdates(c *gin.Context) {
-	c.String(http.StatusOK, "Get Device Updates")
-}
-
-func publishFile(c *gin.Context) {
-	c.String(http.StatusOK, "Publish file")
-}
-
-func getLog(c *gin.Context) {
-	c.String(http.StatusOK, "Get Device log")
-}
-
-func loginAdmin(c *gin.Context) {
-	username := c.PostForm("username")
-	password := c.PostForm("password")
-	log.Printf("Admin Login: %s %s", username, password)
-	c.String(http.StatusOK, "Admin Login")
+func showAllDevices(c *gin.Context) {
+	c.String(http.StatusOK, "Show All Devices")
 }
 
 func loginAdminAPI(c *gin.Context) {
@@ -119,21 +98,14 @@ func ProvideService(certfn, pvtkeyfn, hostnport string, htmlpath string) {
 	r.GET("/", getTop)
 	// Device functions
 	devroutes := r.Group("/d")
-	devroutes.GET("/register/:deviceid/:softrev/:pubkey", registerDevice)
+	devroutes.POST("/reg/:deviceid/:password/:uuid/:softrev", registerDevice)
+	devroutes.GET("/show", showAllDevices)
+	devroutes.GET("/show/:deviceid", showDevice)
 
-	//r.GET("/api/v1/device/register/:deviceid/:softrev/:publickey", registerDevice)
-
-	r.GET("/api/v1/device/login/:deviceid/:password", loginDevice)
-	r.GET("/api/v1/device/pull/:token", getDeviceUpdates)
 	// Admin functions
-
-	//adminroutes := r.Group("/a")
-	//adminroutes.POST("/login", loginAdmin)
-	r.GET("/login/:username/:password", loginAdminAPI)
-
-	r.POST("/api/v1/admin/publish/:token/:file", publishFile)
-	r.GET("/api/v1/admin/log/:deviceid", getLog)
-	//r.POST("/api/v1/login", loginAdmin)
+	adminroutes := r.Group("/a")
+	adminroutes.GET("/login/:username/:password", loginAdminAPI)
+	adminroutes.POST("/reg/:deviceid/:password/:uuid/:softrev", registerAdmin)
 
 	r.RunTLS(hostnport, certfn, pvtkeyfn)
 

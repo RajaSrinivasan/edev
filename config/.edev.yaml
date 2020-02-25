@@ -4,6 +4,7 @@ server:
     certfile: ../config/certfile
     privatekey: /Users/rajasrinivasan/.ssh/id_rsa
     htmlpath: ../config/html
+    devicedb: ../config/registry.json
 
 client:
     name: AB3456

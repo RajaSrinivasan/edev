@@ -1,0 +1,23 @@
+[
+      {
+        "name": "AB0001",
+        "uuid": "12-34-56-78",
+        "approved": false,
+        "publisher": false,
+        "registered": "2020-02-02T15:04:05Z"
+      },
+      {
+        "name": "AB0002",
+        "uuid": "24-34-56-78",
+        "approved": true,
+        "publisher": false,
+        "registered": "2020-02-02T14:02:03Z"
+      },
+      {
+        "name": "SRV001",
+        "uuid": "12-334-56-78",
+        "approved": false,
+        "publisher": true,
+        "registered": "2020-02-02T15:03:00Z"
+      }
+    ]

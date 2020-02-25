@@ -27,7 +27,7 @@ func Login() bool {
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	client := &http.Client{Transport: tr}
-	url := "https://localhost:8689/login/" + MyName + "/" + pw
+	url := "https://localhost:8689/a/login/" + MyName + "/" + pw
 	log.Printf("Dialing %s", url)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

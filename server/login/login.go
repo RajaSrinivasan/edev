@@ -5,7 +5,6 @@ import (
 	"crypto/md5"
 	"encoding/binary"
 	"encoding/hex"
-	"errors"
 
 	"strings"
 	"time"
@@ -35,29 +34,9 @@ var saltBasis = []uint32{27644437, // Bell Prime
 	28657, // Fibanocci Primes
 	514229}
 
-var uniqueIdTable map[string]uuid.UUID
-var errorId uuid.UUID
-
 func init() {
 	driftMinutesAhead, _ = time.ParseDuration("-3m")
 	driftMinutesBehind, _ = time.ParseDuration("3m")
-
-	uniqueIdTable = make(map[string]uuid.UUID)
-	id, _ := uuid.Parse("301245be-4e02-4036-bec4-ec20edbdaadd")
-	uniqueIdTable["srini"] = id
-	id, _ = uuid.Parse("f0018d8a-d221-46af-820e-53c9a7f44c64")
-	uniqueIdTable["admin"] = id
-	errorId = uuid.New()
-	id, _ = uuid.Parse("9542a93a-82e7-403f-8857-4c55fd38391a")
-	uniqueIdTable["AB3456"] = id
-}
-
-func lookupUniqueId(un string) (uuid.UUID, error) {
-	val, err := uniqueIdTable[un]
-	if !err {
-		return errorId, errors.New("Undefined user " + un)
-	}
-	return val, nil
 }
 
 // Generate (un string, ud uuid.UUID, t time.Time) string

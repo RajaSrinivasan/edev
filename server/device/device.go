@@ -52,7 +52,7 @@ func Load(fn string) error {
 
 func Save(fni ...string) error {
 	fn := databaseName
-	if len(fn) > 0 {
+	if len(fni) > 0 {
 		fn = fni[0]
 	}
 

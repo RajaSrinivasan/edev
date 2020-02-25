@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/spf13/cobra"
+	"gitlab.com/RajaSrinivasan/edev/client/impl"
 )
 
-var nameToregister string
 var publisherNode *bool
 
 // registerCmd represents the register command
@@ -17,8 +17,8 @@ var registerCmd = &cobra.Command{
 	Register the device with the server to establish 
 	a trusted relationship.	
 	Argument is the name to register. In most cases, this will be the same as the hostname.`,
-	Args: cobra.MinimumNArgs(1),
-	Run:  Register,
+
+	Run: Register,
 }
 
 func init() {
@@ -27,6 +27,9 @@ func init() {
 }
 
 func Register(cmd *cobra.Command, args []string) {
-	nameToregister = args[0]
-	fmt.Println("Will register the name ", args[0])
+	if len(args) > 0 {
+		impl.Name = args[0]
+		log.Println("Will register the name ", args[0])
+	}
+	impl.Register(*publisherNode)
 }

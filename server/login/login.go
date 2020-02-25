@@ -6,7 +6,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
-	"log"
+
 	"strings"
 	"time"
 
@@ -106,27 +106,19 @@ func Verify(username string, password string, ud uuid.UUID, ts ...time.Time) boo
 		}
 	}
 
-	uid, err := lookupUniqueId(username)
-	if err != nil {
-		log.Printf("%s", err)
-		return false
-	}
-
-	log.Printf("Using unique id %s incoming %s", uid.String(), ud.String())
-
-	p1 := Generate(username, uid, t1)
+	p1 := Generate(username, ud, t1)
 	if strings.Compare(p1, password) == 0 {
 		return true
 	}
 
 	t2 := t1.Add(driftMinutesAhead)
-	p2 := Generate(username, uid, t2)
+	p2 := Generate(username, ud, t2)
 	if strings.Compare(p2, password) == 0 {
 		return true
 	}
 
 	t3 := t1.Add(driftMinutesBehind)
-	p3 := Generate(username, uid, t3)
+	p3 := Generate(username, ud, t3)
 	if strings.Compare(p3, password) == 0 {
 		return true
 	}

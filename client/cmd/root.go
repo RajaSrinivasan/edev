@@ -2,21 +2,16 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/spf13/cobra"
+	"gitlab.com/RajaSrinivasan/edev/client/impl"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
 var cfgFile string
-
-var Password string
-var Server string
-var registeredName string
-var uniqueId string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -40,8 +35,6 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.device.yaml)")
-	rootCmd.PersistentFlags().StringP("password-salt", "s", "", "Salt for password generation")
-	rootCmd.MarkFlagRequired("password-salt")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -68,15 +61,10 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
-		Server = viper.GetString("server.url")
-		log.Printf("Server URL set to %s", Server)
-		registeredName = viper.GetString("client.name")
-		uniqueId = viper.GetString("client.uuid")
-	} else {
-		fmt.Println("No config file. Will use password environment var")
-		viper.SetEnvPrefix("edev")
-		viper.BindEnv("passsalt")
-		viper.BindPFlag("passsalt", rootCmd.PersistentFlags().Lookup("password-salt"))
+
+		impl.Name = viper.GetString("client.name")
+		impl.UniqueID = viper.GetString("client.uuid")
+		impl.Server = viper.GetString("client.serverurl") + ":" + viper.GetString("client.serverport")
+
 	}
-	Password = viper.GetString("password-salt")
 }

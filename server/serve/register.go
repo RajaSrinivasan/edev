@@ -3,6 +3,7 @@ package serve
 import (
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -11,15 +12,16 @@ import (
 	"gitlab.com/RajaSrinivasan/edev/server/login"
 )
 
-func validateUser(c *gin.Context) bool {
+func validateNewUser(c *gin.Context) bool {
 	uid, err := uuid.Parse(c.Param("uuid"))
 	if err != nil {
 		log.Printf("Invalid UUID %s (err)", uid, err)
 		return false
 	}
-	v := login.Verify(c.Param("deviceid"), c.Param("password"), uid)
-	if !v {
-		log.Printf("Authentication failure %s", c.Param("deviceid"))
+
+	pw := login.Generate(c.Param("deviceid"), uid, time.Now().UTC())
+	if strings.Compare(pw, c.Param("password")) != 0 {
+		log.Printf("Password Incorrect. Got %s", pw)
 		return false
 	}
 	return true
@@ -27,7 +29,8 @@ func validateUser(c *gin.Context) bool {
 
 func register(c *gin.Context, admin bool) {
 	log.Printf("Device %s Password %s ", c.Param("deviceid"), c.Param("password"))
-	v := validateUser(c)
+
+	v := validateNewUser(c)
 	if !v {
 		c.String(http.StatusForbidden, "Authentication Failure")
 		return
@@ -42,12 +45,20 @@ func register(c *gin.Context, admin bool) {
 		Registered: time.Now().UTC()}
 	err := dev.Register()
 	if err != nil {
+		log.Printf("%s", err)
 		c.String(http.StatusBadRequest, "Failed to register device")
 		return
 	}
-	device.Save()
+
+	err = device.Save()
+	if err != nil {
+		log.Printf("%s", err)
+		c.String(http.StatusBadRequest, "Failed to register device")
+		return
+	}
 	c.String(http.StatusOK, "Registratered device")
 }
+
 func registerDevice(c *gin.Context) {
 	register(c, false)
 }

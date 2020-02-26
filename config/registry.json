@@ -2,22 +2,46 @@
       {
         "name": "AB0001",
         "uuid": "12-34-56-78",
+        "version": "",
         "approved": false,
         "publisher": false,
-        "registered": "2020-02-02T15:04:05Z"
+        "registered": "2020-02-02T15:04:05Z",
+        "softrev": ""
       },
       {
         "name": "AB0002",
         "uuid": "24-34-56-78",
+        "version": "",
         "approved": true,
         "publisher": false,
-        "registered": "2020-02-02T14:02:03Z"
+        "registered": "2020-02-02T14:02:03Z",
+        "softrev": ""
       },
       {
         "name": "SRV001",
         "uuid": "12-334-56-78",
+        "version": "",
         "approved": false,
         "publisher": true,
-        "registered": "2020-02-02T15:03:00Z"
+        "registered": "2020-02-02T15:03:00Z",
+        "softrev": ""
+      },
+      {
+        "name": "AB3456",
+        "uuid": "9542a93a-82e7-403f-8857-4c55fd38391a",
+        "version": "A",
+        "approved": false,
+        "publisher": false,
+        "registered": "2020-02-25T10:38:50.553262Z",
+        "softrev": ""
+      },
+      {
+        "name": "RL00001",
+        "uuid": "9542a93a-82e7-403f-8857-4c55fd38391a",
+        "version": "A",
+        "approved": false,
+        "publisher": false,
+        "registered": "2020-02-25T17:30:58.616898Z",
+        "softrev": ""
       }
     ]

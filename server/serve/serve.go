@@ -73,10 +73,6 @@ func showDevice(c *gin.Context) {
 	c.String(http.StatusOK, "Show Device")
 }
 
-func showAllDevices(c *gin.Context) {
-	c.String(http.StatusOK, "Show All Devices")
-}
-
 func loginAdminAPI(c *gin.Context) {
 	username := c.Param("username")
 	password := c.Param("password")
@@ -99,14 +95,14 @@ func ProvideService(certfn, pvtkeyfn, hostnport string, htmlpath string) {
 	// Device functions
 	devroutes := r.Group("/d")
 	devroutes.POST("/reg/:deviceid/:password/:uuid/:softrev", registerDevice)
-	devroutes.GET("/show", showAllDevices)
 	devroutes.GET("/show/:deviceid", showDevice)
 
 	// Admin functions
 	adminroutes := r.Group("/a")
 	adminroutes.GET("/login/:username/:password", loginAdminAPI)
 	adminroutes.POST("/reg/:deviceid/:password/:uuid/:softrev", registerAdmin)
-
+	adminroutes.GET("/show/:deviceid/:password", showAllDevices)
+	adminroutes.GET("/show/:deviceid/:password/:devspec", showAllDevices)
 	r.RunTLS(hostnport, certfn, pvtkeyfn)
 
 }

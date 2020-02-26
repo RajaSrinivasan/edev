@@ -16,14 +16,13 @@ type Device struct {
 	Approved   bool      `json:"approved"`
 	Publisher  bool      `json:"publisher"`
 	Registered time.Time `json:"registered"`
-	SoftRev    string    `json:"softrev"`
 }
 
 var databaseName string
-var devices []Device
+var KnownDevices []Device
 
 func ShowAll() {
-	for _, dev := range devices {
+	for _, dev := range KnownDevices {
 		log.Printf("Name : %s UUID %s Registered %v", dev.Name, dev.UniqueID, dev.Approved)
 	}
 }
@@ -31,6 +30,9 @@ func (dev *Device) Show() {
 	log.Printf("Name : %s UUID %s Registered %v", dev.Name, dev.UniqueID, dev.Approved)
 }
 
+func Set(devs string) error {
+	json.Unmarshal([]byte(devs), &KnownDevices)
+}
 func Load(fn string) error {
 	ifile, err := os.Open(fn)
 	if err != nil {
@@ -40,7 +42,7 @@ func Load(fn string) error {
 	defer ifile.Close()
 
 	jload := json.NewDecoder(ifile)
-	err = jload.Decode(&devices)
+	err = jload.Decode(&KnownDevices)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -65,7 +67,7 @@ func Save(fni ...string) error {
 
 	jcode := json.NewEncoder(ofile)
 	jcode.SetIndent("    ", "  ")
-	err = jcode.Encode(devices)
+	err = jcode.Encode(KnownDevices)
 	if err != nil {
 		log.Printf("%s", err)
 		return err
@@ -76,7 +78,7 @@ func Save(fni ...string) error {
 
 func Find(dn string) *Device {
 
-	for _, dev := range devices {
+	for _, dev := range KnownDevices {
 		if strings.Compare(dn, dev.Name) == 0 {
 			return &dev
 		}
@@ -87,7 +89,7 @@ func Find(dn string) *Device {
 func (dev Device) Register() error {
 	old := Find(dev.Name)
 	if old == nil {
-		devices = append(devices, dev)
+		KnownDevices = append(KnownDevices, dev)
 		return nil
 	}
 	return errors.New("Already Registered")

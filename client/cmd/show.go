@@ -1,9 +1,8 @@
 package cmd
 
 import (
-	"log"
-
 	"github.com/spf13/cobra"
+	"gitlab.com/RajaSrinivasan/edev/client/impl"
 )
 
 // showCmd represents the show command
@@ -20,16 +19,19 @@ var showCmd = &cobra.Command{
 	are listed. This will include uploads and downloads.
 
 	`,
-	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) > 0 {
-			log.Printf("Showing activity for %v", args)
-		} else {
-			log.Printf("Showing activity for all node")
-		}
-	},
+	Run: Show,
 }
 
 func init() {
 	rootCmd.AddCommand(showCmd)
 	newerThan = showCmd.PersistentFlags().StringP("newer-than", "n", "", "Reference file. Mod time is used to get files newer than")
+}
+
+func Show(cmd *cobra.Command, args []string) {
+	arg := "all"
+	if len(args) > 0 {
+		arg = args[0]
+	}
+	impl.Show(arg)
+
 }

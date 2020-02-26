@@ -7,5 +7,5 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/viper v1.6.2
-	gitlab.com/RajaSrinivasan/edev/server v0.0.0-20200218214624-82d694203ab5
+	gitlab.com/RajaSrinivasan/edev/server v0.0.0-20200225175550-234ce7fc5b72
 )

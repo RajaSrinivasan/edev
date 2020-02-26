@@ -30,7 +30,7 @@ func (dev *Device) Show() {
 	log.Printf("Name : %s UUID %s Registered %v", dev.Name, dev.UniqueID, dev.Approved)
 }
 
-func Set(devs string) error {
+func SetJSON(devs string) error {
 	json.Unmarshal([]byte(devs), &KnownDevices)
 	return nil
 }

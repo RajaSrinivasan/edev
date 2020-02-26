@@ -54,8 +54,8 @@ func TestRegister(t *testing.T) {
 	Save("../../config/registry.out.json")
 }
 
-func TestSet(t *testing.T) {
+func TestSetJSON(t *testing.T) {
 	conts, _ := ioutil.ReadFile("../../config/registry.out.json")
-	Set(string(conts))
+	SetJSON(string(conts))
 	ShowAll()
 }

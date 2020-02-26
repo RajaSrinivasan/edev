@@ -32,6 +32,7 @@ func (dev *Device) Show() {
 
 func Set(devs string) error {
 	json.Unmarshal([]byte(devs), &KnownDevices)
+	return nil
 }
 func Load(fn string) error {
 	ifile, err := os.Open(fn)

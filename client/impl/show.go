@@ -3,7 +3,7 @@ package impl
 import (
 	"log"
 
-	"gitlab.com/RajaSrinivasan/edev/server/device"
+	device "gitlab.com/RajaSrinivasan/edev/tools"
 )
 
 func Show(arg string) {
@@ -12,6 +12,6 @@ func Show(arg string) {
 	auth := genAuth()
 	fullurl := "https://" + Server + "/" + top + "/show" + auth + "/" + arg
 	resp := getAnswer(fullurl, "GET")
-	device.Set(resp)
+	device.SetJSON(resp)
 	device.ShowAll()
 }

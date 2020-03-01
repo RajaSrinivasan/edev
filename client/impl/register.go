@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	slogin "gitlab.com/RajaSrinivasan/edev/server/login"
+	slogin "gitlab.com/RajaSrinivasan/edev/tools"
 )
 
 var Server string

@@ -1,4 +1,4 @@
-package device
+package tools
 
 import (
 	"io/ioutil"
@@ -7,22 +7,22 @@ import (
 )
 
 func TestLoad(t *testing.T) {
-	err := Load("../../config/registry.json")
+	err := Load("../config/registry.json")
 	if err == nil {
 		ShowAll()
 	}
 }
 
 func TestSave(t *testing.T) {
-	Load("../../config/registry.json")
-	err := Save("../../config/registry.out.json")
+	Load("../config/registry.json")
+	err := Save("../config/registry.out.json")
 	if err != nil {
 		t.Error(err)
 	}
 }
 
 func TestFind(t *testing.T) {
-	Load("../../config/registry.json")
+	Load("../config/registry.json")
 	d := Find("AB00099")
 	if d == nil {
 		log.Println("Cannot find AB00099")
@@ -36,7 +36,7 @@ func TestFind(t *testing.T) {
 }
 
 func TestRegister(t *testing.T) {
-	Load("../../config/registry.json")
+	Load("../config/registry.json")
 	d := Find("AB0001")
 	d.UniqueID = "newid"
 	err := (*d).Register()
@@ -51,7 +51,7 @@ func TestRegister(t *testing.T) {
 		log.Printf("Registered RL00001")
 	}
 
-	Save("../../config/registry.out.json")
+	Save("../config/registry.out.json")
 }
 
 func TestSetJSON(t *testing.T) {

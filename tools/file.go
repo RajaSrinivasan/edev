@@ -54,19 +54,19 @@ func ToJSON(fn string) (string, error) {
 	return string(pj), nil
 }
 
-func FromJSON(conts string) (string, error) {
+func FromJSON(conts string) (string, string, error) {
 	var payload FilePayLoad
 
 	err := json.Unmarshal([]byte(conts), &payload)
 	if err != nil {
 		log.Printf("%s", err)
-		return "", err
+		return "", "", err
 	}
 
 	fb, err := base64.StdEncoding.DecodeString(payload.Contents)
 	if err != nil {
 		log.Printf("%s", err)
-		return "", err
+		return "", "", err
 	}
 
 	fsig := md5.New()
@@ -75,7 +75,7 @@ func FromJSON(conts string) (string, error) {
 
 	if strings.Compare(fsigstr, payload.Signature) != 0 {
 		log.Printf("Signature Comparison failed. Got %s Expecting %s\n", fsigstr, payload.Signature)
-		return "", errors.New("Signature Comparison failed")
+		return "", "", errors.New("Signature Comparison failed")
 	} else {
 		log.Printf("File Signature %s\n", fsigstr)
 	}
@@ -83,11 +83,11 @@ func FromJSON(conts string) (string, error) {
 	of, err := ioutil.TempFile("", payload.Name)
 	if err != nil {
 		log.Printf("%s", err)
-		return "", err
+		return "", "", err
 	}
 	defer of.Close()
 
 	ofn := of.Name()
 	of.Write(fb)
-	return ofn, nil
+	return payload.Name, ofn, nil
 }

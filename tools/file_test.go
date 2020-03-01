@@ -18,7 +18,7 @@ func TestToJSON(t *testing.T) {
 func TestFromJSON(t *testing.T) {
 
 	fj, _ := ToJSON("file_test.go")
-	ofn, _ := FromJSON(fj)
-	fmt.Printf("%s\n", ofn)
+	tfn, ofn, _ := FromJSON(fj)
+	fmt.Printf("%s saved as %s\n", tfn, ofn)
 
 }

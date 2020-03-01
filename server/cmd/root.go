@@ -7,8 +7,8 @@ import (
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"gitlab.com/RajaSrinivasan/edev/server/device"
 	"gitlab.com/RajaSrinivasan/edev/server/serve"
+	device "gitlab.com/RajaSrinivasan/edev/tools"
 )
 
 var cfgFile string

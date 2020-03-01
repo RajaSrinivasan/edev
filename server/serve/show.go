@@ -6,8 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"gitlab.com/RajaSrinivasan/edev/server/device"
-	"gitlab.com/RajaSrinivasan/edev/server/login"
+	device "gitlab.com/RajaSrinivasan/edev/tools"
+	login "gitlab.com/RajaSrinivasan/edev/tools"
 )
 
 func isValidClient(c *gin.Context) bool {

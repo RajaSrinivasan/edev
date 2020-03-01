@@ -9,7 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"gitlab.com/RajaSrinivasan/edev/server/login"
+	login "gitlab.com/RajaSrinivasan/edev/tools"
 )
 
 var tempid uuid.UUID

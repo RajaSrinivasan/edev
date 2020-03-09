@@ -1,11 +1,11 @@
 package serve
 
 import (
-	"github.com/gin-gonic/gin"
-	"gitlab.com/RajaSrinivasan/edev/tools"
 	"log"
 	"net/http"
-	"path/filepath"
+
+	"github.com/gin-gonic/gin"
+	"gitlab.com/RajaSrinivasan/edev/tools"
 )
 
 func saveDeviceFile(c *gin.Context) {
@@ -14,7 +14,7 @@ func saveDeviceFile(c *gin.Context) {
 		c.JSON(http.StatusForbidden, "Client Not Recognized")
 		return
 	}
-	ofdir := filepath.Join()
+
 	fj := c.Param("data")
 	ofn, err := tools.FromJSON(fj, "/tmp")
 	if err != nil {

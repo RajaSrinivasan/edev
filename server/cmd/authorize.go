@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var revokeAuthorization *bool
+var revokeAuthorization bool
 
 var authorizeCmd = &cobra.Command{
 	Use:   "authorize",

@@ -13,12 +13,14 @@ func TestToJSON(t *testing.T) {
 	fj, _ = ToJSON("file.go")
 	fmt.Printf("%s\n", fj)
 
+	fj, _ = ToJSON("../server/serve/serve.go")
+	fmt.Printf("%s\n", fj)
 }
 
 func TestFromJSON(t *testing.T) {
 
 	fj, _ := ToJSON("file_test.go")
-	tfn, ofn, _ := FromJSON(fj)
-	fmt.Printf("%s saved as %s\n", tfn, ofn)
+	ofn, _ := FromJSON(fj, "/tmp")
+	fmt.Printf("%s saved\n", ofn)
 
 }

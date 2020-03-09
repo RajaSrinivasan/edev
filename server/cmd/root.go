@@ -84,6 +84,7 @@ func initConfig() {
 		serverCertFileName = viper.GetString("server.certfile")
 		pvtKeyFileName = viper.GetString("server.privatekey")
 		htmlPath = viper.GetString("server.htmlpath")
+		serve.FileStoreRoot = viper.GetString("server.filestore")
 
 		deviceDB = viper.GetString("server.devicedb")
 		device.Load(deviceDB)

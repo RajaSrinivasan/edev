@@ -9,17 +9,25 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path"
+	"path/filepath"
 	"strings"
 )
 
+// This structure represents the payload.
 type FilePayLoad struct {
-	Name      string
-	Size      int64
-	Mode      uint32
-	Contents  string
-	Signature string
+	Name      string                    // base name of the file
+	Size      int64                     // size of the file
+	Mode      uint32                    // Mode
+	Contents  string                    // file contents converted to base64 notation
+	Signature string                    // hash signature of the contents using md5
 }
 
+// ToJSON(fn string) (string, error) packs the contents of the specified file
+// into a JSON structure suitable for transmission to a server (http)
+// The file mode, size are extracted; an md5 signature is computed of the contentts
+// to create a FilePayload structure which is convenrted into a JSON string.
+// Returns the json string and a status code
 func ToJSON(fn string) (string, error) {
 
 	s, err := os.Stat(fn)
@@ -38,7 +46,7 @@ func ToJSON(fn string) (string, error) {
 	fsig.Write(fb)
 
 	payload := FilePayLoad{
-		Name:      fn,
+		Name:      path.Base(fn),
 		Size:      s.Size(),
 		Mode:      uint32(s.Mode()),
 		Contents:  base64.StdEncoding.EncodeToString(fb),
@@ -54,19 +62,24 @@ func ToJSON(fn string) (string, error) {
 	return string(pj), nil
 }
 
-func FromJSON(conts string) (string, string, error) {
+
+// FromJSON(conts string, odir string) (string, error) is the reverse of the ToJSON. It takes
+// the json string conts and extracts the file contents and creates a file in the odir directory.
+// Before it accepts the data, the md5 signature is verified.
+// Returns the output file name (odir + the base name of the file) and a status code
+func FromJSON(conts string, odir string) (string, error) {
 	var payload FilePayLoad
 
 	err := json.Unmarshal([]byte(conts), &payload)
 	if err != nil {
 		log.Printf("%s", err)
-		return "", "", err
+		return "", err
 	}
 
 	fb, err := base64.StdEncoding.DecodeString(payload.Contents)
 	if err != nil {
 		log.Printf("%s", err)
-		return "", "", err
+		return "", err
 	}
 
 	fsig := md5.New()
@@ -75,19 +88,19 @@ func FromJSON(conts string) (string, string, error) {
 
 	if strings.Compare(fsigstr, payload.Signature) != 0 {
 		log.Printf("Signature Comparison failed. Got %s Expecting %s\n", fsigstr, payload.Signature)
-		return "", "", errors.New("Signature Comparison failed")
+		return "", errors.New("Signature Comparison failed")
 	} else {
 		log.Printf("File Signature %s\n", fsigstr)
 	}
 
-	of, err := ioutil.TempFile("", payload.Name)
+	ofn := filepath.Join(odir, payload.Name)
+	of, err := os.Create(ofn)
 	if err != nil {
 		log.Printf("%s", err)
-		return "", "", err
+		return "", err
 	}
 	defer of.Close()
 
-	ofn := of.Name()
 	of.Write(fb)
-	return payload.Name, ofn, nil
+	return ofn, nil
 }

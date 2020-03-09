@@ -5,7 +5,8 @@ server:
     privatekey: /Users/rajasrinivasan/.ssh/id_rsa
     htmlpath: ../config/html
     devicedb: ../config/registry.json
-
+    filestore: /tmp
+    
 client:
     name: AB3456
     uuid: 9542a93a-82e7-403f-8857-4c55fd38391a

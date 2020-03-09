@@ -12,6 +12,7 @@ import (
 	login "gitlab.com/RajaSrinivasan/edev/tools"
 )
 
+var FileStoreRoot string
 var tempid uuid.UUID
 
 func init() {
@@ -96,6 +97,7 @@ func ProvideService(certfn, pvtkeyfn, hostnport string, htmlpath string) {
 	devroutes := r.Group("/d")
 	devroutes.POST("/reg/:deviceid/:password/:uuid/:softrev", registerDevice)
 	devroutes.GET("/show/:deviceid", showDevice)
+	devroutes.PUT("/p/:deviceid/:password/:data", saveDeviceFile)
 
 	// Admin functions
 	adminroutes := r.Group("/a")

@@ -7,25 +7,31 @@ import (
 )
 
 var newerThan *string
+var listOption *bool
+var outputDir *string
+var devNames *[]string
 
 // pullCmd represents the pull command
 var pullCmd = &cobra.Command{
 	Use:   "pull",
-	Short: "Download files",
+	Short: "Retrieve list of available files",
 	Long: `
-	Download files that are allowed for my device.
+	Retrieve a list of files that are available for my device. The returned list is a list of
+	file id's.
 
-	If an argument is provided then only the specified name will be downloaded.
-
-	All files are .spm files.
+	Files can be retrieved using file id's as arguments
 
 	`,
+
 	Run: Pull,
 }
 
 func init() {
 	rootCmd.AddCommand(pullCmd)
-	newerThan = pullCmd.PersistentFlags().StringP("newer-than", "n", "", "Reference file. Mod time is used to get files newer than")
+	newerThan = pullCmd.PersistentFlags().StringP("since", "s", "", "Reference file. Mod time is used to get files newer than. Only list these files")
+	listOption = pullCmd.PersistentFlags().BoolP("list-only", "l", false, "Retrieve a list of the files.")
+	devNames = pullCmd.PersistentFlags().StringArrayP("device-names", "d", []string{""}, "Devices Names whose files are to be listed")
+	outputDir = pullCmd.PersistentFlags().StringP("output-dir", "o", "", "Output Dir where files are to be stored")
 }
 
 func Pull(cmd *cobra.Command, args []string) {

@@ -8,10 +8,7 @@ import (
 
 func Show(arg string) {
 	log.Printf("Show %s", arg)
-	top := "a"
-	auth := genAuth()
-	fullurl := "https://" + Server + "/" + top + "/show" + auth + "/" + arg
-	resp := getAnswer(fullurl, "GET")
+	resp := getAnswer("/d/show", arg, "GET")
 	device.SetJSON(resp)
 	device.ShowAll()
 }

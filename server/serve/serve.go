@@ -95,7 +95,14 @@ func ProvideService(certfn, pvtkeyfn, hostnport string, htmlpath string) {
 	r.GET("/", getTop)
 	// Device functions
 	devroutes := r.Group("/d")
-	devroutes.POST("/reg/:deviceid/:password/:uuid/:softrev", registerDevice)
+	// register
+	devroutes.POST("/reg/:deviceid/:password/:uuid", registerDevice)
+
+	// authorize
+	devroutes.GET("/auth/:deviceid/:password/list", showAllDevices)
+	devroutes.PUT("/auth/:deviceid/:password/app/:devspec", approveDevice)
+	devroutes.PUT("/auth/:deviceid/:password/rev/:devspec", revokeDevice)
+
 	devroutes.GET("/show/:deviceid", showDevice)
 	devroutes.PUT("/p/:deviceid/:password/:data", saveDeviceFile)
 

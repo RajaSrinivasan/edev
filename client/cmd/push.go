@@ -26,7 +26,7 @@ var pushCmd = &cobra.Command{
 func init() {
 
 	rootCmd.AddCommand(pushCmd)
-	targetnodes = pushCmd.PersistentFlags().StringArrayP("target-nodes", "t", []string{""}, "Target nodes")
+	targetnodes = pushCmd.PersistentFlags().StringArrayP("destination-nodes", "d", []string{""}, "Target nodes")
 
 }
 

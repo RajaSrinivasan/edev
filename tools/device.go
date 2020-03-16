@@ -86,6 +86,16 @@ func Find(dn string) *Device {
 	}
 	return nil
 }
+func Approve(dn string, app bool) error {
+	for idx, dev := range KnownDevices {
+		if strings.Compare(dn, dev.Name) == 0 {
+			KnownDevices[idx].Approved = app
+			Save()
+			return nil
+		}
+	}
+	return errors.New("Device not found")
+}
 
 func (dev Device) Register() error {
 	old := Find(dev.Name)

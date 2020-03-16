@@ -24,7 +24,7 @@ var showCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(showCmd)
-	newerThan = showCmd.PersistentFlags().StringP("newer-than", "n", "", "Reference file. Mod time is used to get files newer than")
+
 }
 
 func Show(cmd *cobra.Command, args []string) {

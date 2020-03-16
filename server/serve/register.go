@@ -37,16 +37,16 @@ func register(c *gin.Context, admin bool) {
 	}
 
 	dev := device.Device{
-		Name:       c.Param("deviceid"),
-		UniqueID:   c.Param("uuid"),
-		Version:    c.Param("softrev"),
+		Name:     c.Param("deviceid"),
+		UniqueID: c.Param("uuid"),
+
 		Approved:   false,
 		Publisher:  admin,
 		Registered: time.Now().UTC()}
 	err := dev.Register()
 	if err != nil {
 		log.Printf("%s", err)
-		c.String(http.StatusBadRequest, "Failed to register device")
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
